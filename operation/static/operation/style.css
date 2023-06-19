@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+html, body {
+    margin:0;
+    padding:0;
+    font-family: 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0;
+    list-style-type: none;
+    background-color: black;
+    color: white;
+    padding: 20px 20px 20px 20px;
+    font-size: large;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    width: 150px;
+}
+
+.logo {
+    font-family: 'Dancing Script', cursive;
+    font-size: 40px;
+}
+
+.menu a{
+    padding: 32px 50px 34px 50px;
+    transition: ease 0.3s;
+}
+
+.menu a:hover {
+    background-color: white;
+    color: black;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0 40px 0;
+}
+
+.center {
+    width: 60%;
+    padding: 30px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow-x:auto;
+}
+
+/* Orden */
+
+table.order-table {
+    border: 2px solid #FFFFFF;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  table.order-table td, table.order-table th {
+    border: 1px solid #FFFFFF;
+    padding: 3px 4px;
+  }
+  table.order-table tbody td {
+    font-size: 14px;
+  }
+  table.order-table td:nth-child(even) {
+    background: #EBEBEB;
+  }
+  table.order-table thead {
+    background: #FFFFFF;
+    border-bottom: 2px solid #333333;
+  }
+  table.order-table thead th {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    border-left: 2px solid #333333;
+  }
+  table.order-table thead th:first-child {
+    border-left: none;
+  }
+  
+  table.order-table tfoot td {
+    font-size: 14px;
+  }
+
+

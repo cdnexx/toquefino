@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Operation</title>
+    <link rel="stylesheet" href="{% static 'operation/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div>
+            <a class="logo" href="/">Toque fino</a>
+        </div>
+        <div class="menu">
+            <a href="/order">Orden</a>
+            <a href="/payment">Pago</a>
+            <a href="/delivery">Entrega</a>
+            <a href="/complaints">Reclamos</a>
+        </div>
+        <a href="/admin">Salir</a>
+    </nav>
+    <div class="container">
+        <div class="center">
+            {% block content %}{% endblock %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+             {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
