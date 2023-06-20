@@ -1,4 +1,27 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<h1>Complaints</h1>
+
+<h1>Nuevo Reclamo</h1>
+
+<hr>
+
+<form class="edit_form" action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-fields">
+        {{ form.as_p }}
+    </div>
+
+    <br>
+
+    <div>
+
+        
+        <button type="reset" >Cancelar</button>
+        &nbsp;&nbsp;
+        <button type="submit">Guardar</button>
+
+    </div>
+</form>
+
+{{msg}}
 {% endblock %}

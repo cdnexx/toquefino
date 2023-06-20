@@ -91,4 +91,42 @@ table.order-table {
     font-size: 14px;
   }
 
+  .title {
+    display: inline-block;
+}
 
+.add_button {
+    float: right;
+    background-color: rgb(0, 145, 0);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add_button:hover {
+    background-color: darkgreen;
+}
+
+.edit_button {
+    float: right;
+    background-color:#ffcccc;
+    color: black;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit_button:hover {
+  background-color: #ff9999;
+}
+
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}

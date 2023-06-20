@@ -80,8 +80,8 @@ DATABASES = {
         'PORT': '',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'toquefino',
-        'USER': 'kinemadbuser',
-        'PASSWORD': 'kinema'
+        'USER': 'postgres',
+        'PASSWORD': 'tomy1904'
     }
 }
 

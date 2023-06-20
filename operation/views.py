@@ -6,6 +6,7 @@ from PyPDF2 import PdfWriter
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from django.http import FileResponse
+from .forms import ClaimForm
 
 # Create your views here.
 
@@ -35,8 +36,8 @@ def payment_page(request):
 def delivery_page(request):
     return render(request, 'delivery.html')
 
-def complaints_page(request):
-    return render(request, 'complaints.html')
+# def complaints_page(request):
+#     return render(request, 'complaints.html')
 
 def product_page(request, barcode, order_id=0):
     product = Product.objects.get(barcode=barcode)
@@ -149,3 +150,30 @@ def gen_pdf(request, order):
         pass
 
     return response
+
+def claim_add(request):
+
+     template_name = 'complaints.html'
+
+     data = {
+        'form': ClaimForm()
+    }
+
+     if request.method == 'POST':
+         form = ClaimForm(data=request.POST, files=request.FILES)
+         if form.is_valid():
+             form.save()
+             data["msg"] = "Reclamo guardado"
+         else:
+             data["form"] = form
+
+     return render(request, template_name, data)
+
+def claim_list(request):
+    template_name = 'complaints_list.html'
+
+    data = {
+        'claims': Claim.objects.all()
+    }
+
+    return render(request, template_name, data)
