@@ -7,6 +7,7 @@ from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from django.http import FileResponse
 from .forms import ClaimForm
+from django.core import serializers
 
 # Create your views here.
 
@@ -27,14 +28,75 @@ def order_page(request, order_id="0"):
             'order_products': order_products,
             'total': total
             })
-    print("holas")
     return render(request, 'order.html', {'order': order_id})
 
-def payment_page(request):
-    return render(request, 'payment.html')
 
-def delivery_page(request):
-    return render(request, 'delivery.html')
+def delivery_page(request, order_id="0"):
+    if order_id != "0":
+        order = Order.objects.get(order_id=order_id)
+        order_products = OrderProduct.objects.filter(order_id=order_id)
+
+        total = 0
+        for p in order_products:
+            total += (p.product.price * p.quantity)
+
+        return render(request, 'delivery.html', {
+            'order': order,
+            'order_products': order_products,
+            'total': total
+            })
+    return render(request, 'delivery.html', {'order': order_id})
+
+def invoice_page(request, order_id):
+    clients = serializers.serialize('json', Client.objects.all())
+    return render(request, 'invoice.html', {
+        'order': order_id,
+        'clients': clients
+        })
+
+def invoice_submit(request):
+    if request.method == 'POST':
+        order_id = request.POST['order']
+        client_id = request.POST['client']
+
+        client_name = request.POST['client_name']
+        client_lastname = request.POST['client_lastname']
+        client_address = request.POST['client_address']
+        client_phone = request.POST['client_phone']
+
+        if Client.objects.filter(client_id=client_id).exists():
+            pass
+        else:
+            if request.POST['invoice_type'] == "email_invoice":
+                client_email = request.POST['client_email']
+                client = Client.objects.create(
+                    client_id=client_id,
+                    client_name=client_name,
+                    client_lastname=client_lastname,
+                    client_address=client_address,
+                    client_phone=client_phone,
+                    client_email=client_email)
+                client.save()
+            else:
+                client = Client.objects.create(
+                    client_id=client_id,
+                    client_name=client_name,
+                    client_lastname=client_lastname,
+                    client_address=client_address,
+                    client_phone=client_phone)
+                client.save()
+
+        client = Client.objects.get(client_id=client_id)
+        invoice = Invoice.objects.create(client=client)
+        invoice.save()
+
+        Order.objects.filter(order_id=order_id).update(
+            invoice=invoice,
+            status="Entregado"
+            )
+        return redirect(f"/delivery")
+    else:
+        return HttpResponse('Método inválido')
 
 # def complaints_page(request):
 #     return render(request, 'complaints.html')
@@ -178,3 +240,56 @@ def claim_list(request):
     }
 
     return render(request, template_name, data)
+
+def payment(request):
+    if request.method == 'POST':
+        order_id = str(request.POST['order_id'])
+        
+        if len(order_id) == 10:
+            try:
+                order = Order.objects.get(order_id=int(order_id))
+                
+                if order.status == 'Confirmado':
+                    return redirect(f'payment/proceder_pago/order_id={order_id}')
+                else:
+                    messages.error(request, 'La orden no está confirmada o ya esta pagada.')
+                    return redirect('payment')
+            
+            except Order.DoesNotExist:
+                messages.error(request, 'Número de orden inválido.')
+                return redirect('payment')
+        
+        else:
+            messages.error(request, 'Número de orden inválido.')
+            return redirect('payment')
+    
+    return render(request, 'payment.html')
+
+
+def proceder_pago(request, order_id):
+    mensaje = None
+    if request.method == 'POST':
+        opcion_pago = request.POST.get('opcion_pago')
+        action = request.POST.get('action')
+        if action == 'Pagar': 
+            Order.objects.filter(order_id=order_id).update(status="Pagado")
+            if opcion_pago == 'efectivo':
+                # Lógica para procesar el pago en efectivo
+                mensaje = "Pago confirmado"
+            elif opcion_pago == 'debito':
+                # Lógica para procesar el pago con tarjeta de débito
+                mensaje = "Pago confirmado"
+            elif opcion_pago == 'credito':
+                # Lógica para procesar el pago con tarjeta de crédito
+                mensaje = "Pago confirmado"
+        elif action == 'Anular':
+            Order.objects.filter(order_id=order_id).update(status="Anulado")
+            order_products = OrderProduct.objects.filter(order_id=order_id)
+            for p in order_products: 
+                product = Product.objects.get(id=p.product_id)
+                product.stock += p.quantity
+                product.save()
+            mensaje = "Pago cancelado"
+
+    return render(request, 'proceder_pago.html', {'mensaje': mensaje, 'order_id': order_id})
+

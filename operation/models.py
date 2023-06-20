@@ -4,6 +4,31 @@ from django.utils import timezone
 
 # Create your models here.
 
+class Client(models.Model):
+    client_id = models.CharField(max_length=100)
+    client_name = models.CharField(max_length=100)
+    client_lastname = models.CharField(max_length=100)
+    client_address = models.CharField(max_length=100)
+    client_phone = models.CharField(max_length=100)
+    client_email = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return f"{self.client_id} | {self.client_name} {self.client_lastname}"
+
+class Invoice(models.Model):
+    invoice_id = models.AutoField(primary_key=True)
+    client = models.ForeignKey('Client', on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Factura #{self.invoice_id}"
+
+class Warehouse(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Warehouse: {self.name}"
+
 class OrderProduct(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
@@ -19,6 +44,8 @@ class Product(models.Model):
     price = models.IntegerField(default=0)
     stock = models.IntegerField(default=0)
     stock_min = models.IntegerField(default=0)
+    warehouse = models.ForeignKey('Warehouse', on_delete=models.CASCADE, null=True)
+    section = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.barcode} | {self.name}"
@@ -27,6 +54,7 @@ class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     products = models.ManyToManyField(Product, through='OrderProduct')
     status = models.CharField(max_length=100, default="En proceso")
+    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, null=True, unique=True)
 
     def __str__(self):
         return f"Orden #{self.order_id}"
