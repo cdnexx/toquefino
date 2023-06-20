@@ -6,6 +6,7 @@ from PyPDF2 import PdfWriter
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from django.http import FileResponse
+from .forms import ClaimForm
 from django.core import serializers
 
 # Create your views here.
@@ -97,8 +98,8 @@ def invoice_submit(request):
     else:
         return HttpResponse('Método inválido')
 
-def complaints_page(request):
-    return render(request, 'complaints.html')
+# def complaints_page(request):
+#     return render(request, 'complaints.html')
 
 def product_page(request, barcode, order_id=0):
     product = Product.objects.get(barcode=barcode)
@@ -212,6 +213,34 @@ def gen_pdf(request, order):
 
     return response
 
+def claim_add(request):
+
+     template_name = 'complaints.html'
+
+     data = {
+        'form': ClaimForm()
+    }
+
+     if request.method == 'POST':
+         form = ClaimForm(data=request.POST, files=request.FILES)
+         if form.is_valid():
+            form.save()
+            messages.success(request, "Reclamo registrado correctamente")
+            return redirect(to="claim_list")
+         else:
+             data["form"] = form
+
+     return render(request, template_name, data)
+
+def claim_list(request):
+    template_name = 'complaints_list.html'
+
+    data = {
+        'claims': Claim.objects.all()
+    }
+
+    return render(request, template_name, data)
+
 def payment(request):
     if request.method == 'POST':
         order_id = str(request.POST['order_id'])
@@ -263,3 +292,4 @@ def proceder_pago(request, order_id):
             mensaje = "Pago cancelado"
 
     return render(request, 'proceder_pago.html', {'mensaje': mensaje, 'order_id': order_id})
+

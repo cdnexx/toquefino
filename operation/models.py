@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 # Create your models here.
 
@@ -57,3 +58,20 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Orden #{self.order_id}"
+    
+class Claim(models.Model):
+    TIPO_RECLAMO_CHOICES = [
+        ('mala atención', 'Mala atención'),
+        ('local en mal estado', 'Local en mal estado'),
+        ('otro', 'Otro'),
+    ]
+    claim_id = models.AutoField(primary_key=True)
+    Orden = models.ForeignKey('Order', on_delete=models.CASCADE)
+    Tipo_de_reclamo = models.CharField(max_length=100, choices=TIPO_RECLAMO_CHOICES, default='Otro')
+    Descripcion_de_reclamo = models.CharField(max_length=1000)
+    Nombre = models.CharField(max_length=100)
+    Correo = models.EmailField(max_length=100, default="su_correo@gmail.com")
+    Fecha = models.DateField(default=timezone.now, editable=False)
+
+    def __str__(self):
+        return f"Reclamo #{self.claim_id} | {self.Tipo_de_reclamo} | {self.Estado_de_reclamo}"
