@@ -162,8 +162,9 @@ def claim_add(request):
      if request.method == 'POST':
          form = ClaimForm(data=request.POST, files=request.FILES)
          if form.is_valid():
-             form.save()
-             data["msg"] = "Reclamo guardado"
+            form.save()
+            messages.success(request, "Reclamo registrado correctamente")
+            return redirect(to="claim_list")
          else:
              data["form"] = form
 
