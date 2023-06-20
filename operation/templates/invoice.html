@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<script>
+    var clients = JSON.parse('{{ clients | safe }}');
+    function fillFields(){
+        var client_id = document.getElementsByName("client")[0].value;
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].fields.client_id == client_id) {
+                document.getElementsByName("client_name")[0].value = clients[i].fields.client_name;
+                document.getElementsByName("client_lastname")[0].value = clients[i].fields.client_lastname;
+                document.getElementsByName("client_address")[0].value = clients[i].fields.client_address;
+                document.getElementsByName("client_phone")[0].value = clients[i].fields.client_phone;
+                document.getElementsByName("client_email")[0].value = clients[i].fields.client_email;
+            }
+        }
+    }
+
+    function toggleInput() {
+      var inputContainer = document.getElementById("inputContainer");
+      var emailInput = document.getElementById("emailInput");
+      var printedInvoice = document.getElementById("print_invoice");
+
+      if (printedInvoice.checked) {
+        inputContainer.classList.add("hidden");
+      } else {
+        inputContainer.classList.remove("hidden");
+      }
+    }
+
+</script>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<form style="display: flex; justify-content: center;" action="{% url 'invoice_submit' %}" method="post"> {% csrf_token %}
+    <div style="display: flex; flex-direction: column; width: 40%; gap: 10px;">
+        <h2>Facturación para orden N°{{ order }}</h2>
+        <input type="hidden" name="order" value="{{ order }}" required>
+
+        <label for="client">ID</label>
+        <input type="text" name="client" onchange="fillFields()" placeholder="00000000-0" required>
+
+        <label for="client_name">Nombre</label>
+        <input type="text" name="client_name" required>
+
+        <label for="client_lastname">Apellidos</label>
+        <input type="text" name="client_lastname" required>
+
+        <label for="client_address">Dirección</label>
+        <input type="text" name="client_address" required>
+        
+        <label for="client_phone">Teléfono</label>
+        <input type="text" name="client_phone" required>
+        <div>
+            <label for="invoice_type">Recepción de factura</label>
+            <div>
+                <input type="radio" id="print_invoice" name="invoice_type" value="print_invoice" onchange="toggleInput()" checked>
+                <label for="print_invoice">Imprimir</label>
+
+                <input type="radio" id="email_invoice" name="invoice_type" value="email_invoice" onchange="toggleInput()">
+                <label for="email_invoice">Email</label>
+            </div>
+        </div>
+        <p id="inputContainer" class="hidden">
+            <label for="client_email">Email</label>
+            <input type="email" name="client_email" id="emailInput">
+        </p>
+        <hr style="width: 100%;">
+        <button type="submit" style="width: 50%; margin-left: 25%;">Emitir factura</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,4 +1,77 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<h1>Delivery</h1>
+<script>
+    function orderInvoice(){
+        var order_id = "{{ order.order_id }}"
+        window.location.href = `/invoice/order_id=${order_id}`;
+    }
+
+    function getBarcode() {
+        var barcode = document.getElementById("barcode").value;
+        // get barcode length
+        if (barcode.length == 10){
+            window.location.href = `/delivery/order_id=${barcode}`;
+        }
+    }
+    
+</script>
+
+<div style="display: flex; justify-content: space-between;">
+    {% if order == "0" %}
+        <h1>Ingresar orden</h1>
+    {% else %}
+        <h1>Orden N°{{ order.order_id }}</h1>
+        {% if order.status == "En proceso" %}
+            <h3 style="color: orange;">{{ order.status }}</h3>
+        {% elif order.status == "Confirmado" %}
+            <h3 style="color: aquamarine;">{{ order.status }}</h3>
+        {% elif order.status == "Pagado" %}
+            <h3 style="color: blue;">{{ order.status }}</h3>
+        {% elif order.status == "Entregado" %}
+            <h3 style="color: greenyellow;">{{ order.status }}</h3>
+        {% else %}
+            <h3 style="color: red;">{{ order.status }}</h3>
+        {% endif %}
+    {% endif %}
+</div>
+<label for="barcode">Código</label>
+<input type="hidden" name="order" value="{{ order.order_id }}">
+<input type="text" id="barcode" name="barcode" autofocus>
+<button onclick="getBarcode()">Ver</button>
+<hr>
+{% if order.status == "Pagado" %}
+    <table class="order-table">
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Almacén</th>
+            <th>Sección</th>
+        </tr>
+        {% for p in order_products %}
+            <tr>
+                <td>{{ p.product.barcode }}</td>
+                <td>{{ p.product.name }}</td>
+                <td>{{ p.quantity }}</td>
+                <td>{{ p.product.warehouse.name }}</td>
+                <td>{{ p.product.section }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>La orden se encuentra en estado <b>"{{ order.status }}"</b> por lo que no está disponible para la entrega.</p>
+{% endif %}
+<hr>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2></h2>
+    <div>
+        {% if order.status != "Pagado" %}
+            <button onclick="" disabled>Anular</button>
+            <button onclick="" disabled>Confirmar</button>
+        {% else %}
+            <button onclick="orderInvoice()">Factura</button>
+            <button onclick="confirmOrder()">Entregado</button>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
