@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+<h1>Listado de órdenes</h1>
+<hr>
+
+<table class="order-table">
+    <tr>
+        <th>Número orden</th>
+        <th>Factura</th>
+        <th>Estado</th>
+        <th>Total</th>
+    </tr>
+    {% for order in orders %}
+        <tr>
+            <td><a href="/order/order_id={{order.order_id}}">{{ order }}</a></td>
+            <td>{{ order.invoice }}</td>
+            <td>{{ order.status }}</td>
+            {% for key, value in totals.items %}
+            {% if key == order.order_id %}
+                <td>${{ value }}</td>
+            {% endif %}
+
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

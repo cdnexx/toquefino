@@ -35,6 +35,10 @@
     }
 
 </script>
+<div style="display: flex;">
+    <a href="/order/list">Ver órdenes</a>
+</div>
+<hr>
 <div style="display: flex; justify-content: space-between;">
     {% if order == "0" %}
         <h1>Nueva Orden</h1>
@@ -55,7 +59,7 @@
 </div>
 <label for="barcode">Código</label>
 <input type="hidden" name="order" value="{{ order.order_id }}">
-<input type="text" id="barcode" name="barcode" autofocus>
+<input type="text" id="barcode" name="barcode" maxlength="10" autofocus>
 <button onclick="getBarcode()">Ver</button>
 <hr>
 <table class="order-table">

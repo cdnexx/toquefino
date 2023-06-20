@@ -36,7 +36,7 @@
 </div>
 <label for="barcode">Código</label>
 <input type="hidden" name="order" value="{{ order.order_id }}">
-<input type="text" id="barcode" name="barcode" autofocus>
+<input type="text" id="barcode" name="barcode" maxlength="10" autofocus>
 <button onclick="getBarcode()">Ver</button>
 <hr>
 {% if order.status == "Pagado" %}
@@ -66,11 +66,11 @@
     <h2></h2>
     <div>
         {% if order.status != "Pagado" %}
-            <button onclick="" disabled>Anular</button>
-            <button onclick="" disabled>Confirmar</button>
+            <button onclick="" disabled>Factura</button>
+            <!-- <button onclick="" disabled>Confirmar</button> -->
         {% else %}
             <button onclick="orderInvoice()">Factura</button>
-            <button onclick="confirmOrder()">Entregado</button>
+            <!-- <button onclick="confirmOrder()">Entregado</button> -->
         {% endif %}
     </div>
 </div>

@@ -8,6 +8,7 @@ urlpatterns = [
     path('delivery', views.delivery_page),
     path('complaints', views.claim_add),
     path('delivery/order_id=<int:order_id>', views.delivery_page),
+    path('order/list', views.order_list_page),
     path('order/order_id=<int:order_id>', views.order_page),
     path('order/product=<str:barcode>', views.product_page),
     path('order/order_id=<int:order_id>/product=<str:barcode>', views.product_page),

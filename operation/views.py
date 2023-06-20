@@ -30,6 +30,18 @@ def order_page(request, order_id="0"):
             })
     return render(request, 'order.html', {'order': order_id})
 
+def order_list_page(request):
+    orders = Order.objects.all()
+    totals = {}
+    for order in orders:
+        total = 0
+        order_products = OrderProduct.objects.filter(order_id=order.order_id)
+        for p in order_products:
+            total += (p.product.price * p.quantity)
+        totals[order.order_id] = total
+
+    return render(request, 'order_list.html', {'orders': orders, 'totals': totals})
+
 
 def delivery_page(request, order_id="0"):
     if order_id != "0":
@@ -94,7 +106,7 @@ def invoice_submit(request):
             invoice=invoice,
             status="Entregado"
             )
-        return redirect(f"/delivery")
+        return redirect(f"/delivery/order_id={order_id}")
     else:
         return HttpResponse('Método inválido')
 
