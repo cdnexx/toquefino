@@ -29,8 +29,6 @@ def order_page(request, order_id="0"):
     print("holas")
     return render(request, 'order.html', {'order': order_id})
 
-def payment_page(request):
-    return render(request, 'payment.html')
 
 def delivery_page(request):
     return render(request, 'delivery.html')
@@ -149,3 +147,55 @@ def gen_pdf(request, order):
         pass
 
     return response
+
+def payment(request):
+    if request.method == 'POST':
+        order_id = str(request.POST['order_id'])
+        
+        if len(order_id) == 10:
+            try:
+                order = Order.objects.get(order_id=int(order_id))
+                
+                if order.status == 'Confirmado':
+                    return redirect(f'payment/proceder_pago/order_id={order_id}')
+                else:
+                    messages.error(request, 'La orden no está confirmada o ya esta pagada.')
+                    return redirect('payment')
+            
+            except Order.DoesNotExist:
+                messages.error(request, 'Número de orden inválido.')
+                return redirect('payment')
+        
+        else:
+            messages.error(request, 'Número de orden inválido.')
+            return redirect('payment')
+    
+    return render(request, 'payment.html')
+
+
+def proceder_pago(request, order_id):
+    mensaje = None
+    if request.method == 'POST':
+        opcion_pago = request.POST.get('opcion_pago')
+        action = request.POST.get('action')
+        if action == 'Pagar': 
+            Order.objects.filter(order_id=order_id).update(status="Pagado")
+            if opcion_pago == 'efectivo':
+                # Lógica para procesar el pago en efectivo
+                mensaje = "Pago confirmado"
+            elif opcion_pago == 'debito':
+                # Lógica para procesar el pago con tarjeta de débito
+                mensaje = "Pago confirmado"
+            elif opcion_pago == 'credito':
+                # Lógica para procesar el pago con tarjeta de crédito
+                mensaje = "Pago confirmado"
+        elif action == 'Anular':
+            Order.objects.filter(order_id=order_id).update(status="Anulado")
+            order_products = OrderProduct.objects.filter(order_id=order_id)
+            for p in order_products: 
+                product = Product.objects.get(id=p.product_id)
+                product.stock += p.quantity
+                product.save()
+            mensaje = "Pago cancelado"
+
+    return render(request, 'proceder_pago.html', {'mensaje': mensaje, 'order_id': order_id})
