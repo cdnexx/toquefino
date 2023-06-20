@@ -91,11 +91,55 @@ table.order-table {
     font-size: 14px;
   }
 
-  .title {
-    display: inline-block;
+/* Form */
+
+.edit_form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.add_button {
+.edit_form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.edit_form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+
+.title {
+  display: inline-block;
+}
+
+.cancel-button {
+    background-color: rgb(194, 0, 0);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-button {
+    background-color: rgb(0, 145, 0);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-button {
     float: right;
     background-color: rgb(0, 145, 0);
     color: white;
@@ -105,11 +149,15 @@ table.order-table {
     cursor: pointer;
 }
 
-.add_button:hover {
+.add-button:hover {
     background-color: darkgreen;
 }
 
-.edit_button {
+.save-button:hover {
+  background-color: darkgreen;
+}
+
+.edit-button {
     float: right;
     background-color:#ffcccc;
     color: black;
@@ -119,10 +167,13 @@ table.order-table {
     cursor: pointer;
 }
 
-.edit_button:hover {
+.edit-button:hover {
   background-color: #ff9999;
 }
 
+.cancel-button:hover {
+  background-color: rgb(117, 0, 0);
+}
 
 .header-container {
   display: flex;
