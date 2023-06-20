@@ -2,7 +2,10 @@
 {% block content %}
 <script>
     function getBarcode() {
-        var order_id = "{{ order.order_id }}"
+        var order_id = "{{ order }}"
+        if ("{{ order.order_id }}" != "") {
+            var order_id = "{{ order.order_id }}"
+        }
         var barcode = document.getElementById("barcode").value;
         if (order_id != "0") {
             window.location.href = `/order/order_id=${order_id}/product=${barcode}`;
