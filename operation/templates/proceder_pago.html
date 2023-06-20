@@ -1,0 +1,143 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <style>
+        .payment-form {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .payment-form h1 {
+            margin-bottom: 20px;
+        }
+
+        .payment-form .title-line {
+            border-top: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .payment-form .payment-options {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .payment-form .payment-option {
+            margin-right: 10px;
+        }
+
+        .payment-form .payment-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .payment-form .payment-option img {
+            width: 100%;
+            height: 125px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+        }
+
+        .payment-form .payment-option .title {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .payment-form .payment-option input[type="radio"] {
+            display: none;
+        }
+
+        .payment-form .payment-option input[type="radio"]:checked + label {
+            border-color: #1bcc50;
+        }
+
+        .payment-form .payment-option input[type="radio"]:checked + label {
+            background-color: #1bcc50; 
+        }
+
+        .payment-form .payment-buttons {
+            margin-top: 20px;
+        }
+
+        .payment-form .payment-button {
+            background-color: #808080;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .payment-form .payment-button.anular {
+            background-color: #ee5858;
+        }
+
+        .payment-form .payment-button:hover {
+            background-color: #606060;
+        }
+    </style>
+
+    <div class="payment-form">
+        <h1>Metodo de pago</h1>
+        <div class="title-line"></div>
+        {% if mensaje %}
+            <p style="color: rgb(14, 13, 13);">{{ mensaje }}</p>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order_id }}">
+                <div class="payment-options">
+                    <div class="payment-option">
+                        <input type="radio" id="efectivo" name="opcion_pago" value="efectivo">
+                        <label for="efectivo">
+                            <img src="https://thumbs.dreamstime.com/b/icono-de-vector-dinero-signo-ilustraci%C3%B3n-efectivo-s%C3%ADmbolo-d%C3%B3lar-logotipo-del-banco-para-sitios-web-o-m%C3%B3viles-170460435.jpg" alt="Efectivo">
+                        </label>
+                        <span class="title">Efectivo</span>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="debito" name="opcion_pago" value="debito">
+                        <label for="debito">
+                            <img src="https://png.pngtree.com/png-vector/20190927/ourlarge/pngtree-credit-or-debit-card-icon-png-image_1736149.jpg" alt="Tarjeta de débito">
+                        </label>
+                        <span class="title">Tarjeta de débito</span>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="credito" name="opcion_pago" value="credito">
+                        <label for="credito">
+                            <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcROtAroxUTJCHE6xLE33EQIIzYI7WDrchqynXkjBqnwwqFsnVfK" alt="Tarjeta de crédito">                        
+                        </label>
+                        <span class="title">Tarjeta de crédito</span>
+                    </div>
+                </div>
+                <div class="payment-buttons">
+                    <input type="submit" name="action" value="Anular" class="payment-button anular">
+                    <input type="submit" name="action" value="Pagar" class="payment-button">
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
